@@ -14,7 +14,7 @@ namespace SDS_Backend.Controllers
     public class SoftwareDownloadSystem : ControllerBase
     {
         private readonly SDS_DBContext _context;
-
+        
         public SoftwareDownloadSystem(SDS_DBContext context)
         {
             _context = context;
@@ -44,6 +44,9 @@ namespace SDS_Backend.Controllers
             _context.softwareDownloadsystem.Add(data);
 
             await _context.SaveChangesAsync();
+
+            SMTPmail smptpMail = new SMTPmail(data);
+            smptpMail.Send();               // Status mail sent
 
             return CreatedAtAction("Success ", new { id = data.ID }, data);
         }
